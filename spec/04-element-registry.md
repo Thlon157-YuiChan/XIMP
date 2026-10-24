@@ -106,7 +106,7 @@ C の既定は、その型を必須とするメッセージでの推奨（SHOULD
 | `0x00FA` | Avatar-Delete | single | 空。アバターを削除する。 | MUST（削除で） |
 | `0x00FB` | Avatar-Ref | list | 軽量版。Avatar-EID + Avatar-Hash + Avatar-Updated。 | MAY |
 | `0x00FC` | Avatar-Known-Hash | single | 32 オクテット。クライアントが既に持っているハッシュ。 | MAY |
-| `0x0100` | Roster-Item | list | 1 件分。入れ子。1.1 で定義。 | MAY |
+| `0x0100` | Roster-Item | list | 1 件分。入れ子。§18 で定義。 | MAY |
 | `0x0101` | Roster-EID | single | EID。UTF-8。 | MUST（Roster-Item で） |
 | `0x0102` | Roster-Sub | single | 1 オクテット。0=none 1=to 2=from 3=both。 | MUST（Roster-Item で） |
 | `0x0103` | Roster-Name | single | UTF-8 ニックネーム。 | MAY |

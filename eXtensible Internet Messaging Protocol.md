@@ -169,7 +169,7 @@ EID = localpart "@" domain
 | `0x12` | RESERVED | 本版では送信禁止（MUST NOT）。 |
 | `0x13` | REACTION | リアクションの追加・削除・集約。保存する。履歴に出してよい。 |
 | `0x20` | PRESENCE | 在席。保存しない。履歴に出さない。 |
-| `0x21` | ROSTER | 連絡先。詳細は 1.1 で定義。 |
+| `0x21` | ROSTER | 連絡先。詳細は §18 で定義。 |
 | `0x30` | IQ | 要求と応答。 |
 | `0x40` | GROUP | 本版では送信禁止（MUST NOT）。受信したら unsupported-type。 |
 | `0x50` | CHUNK | 64 KiB を超える断片。 |
@@ -295,7 +295,7 @@ C の既定は、その型を必須とするメッセージでの推奨（SHOULD
 | `0x00FA` | Avatar-Delete | single | 空。アバターを削除する。 | MUST（削除で） |
 | `0x00FB` | Avatar-Ref | list | 軽量版。Avatar-EID + Avatar-Hash + Avatar-Updated。 | MAY |
 | `0x00FC` | Avatar-Known-Hash | single | 32 オクテット。クライアントが既に持っているハッシュ。 | MAY |
-| `0x0100` | Roster-Item | list | 1 件分。入れ子。1.1 で定義。 | MAY |
+| `0x0100` | Roster-Item | list | 1 件分。入れ子。§18 で定義。 | MAY |
 | `0x0101` | Roster-EID | single | EID。UTF-8。 | MUST（Roster-Item で） |
 | `0x0102` | Roster-Sub | single | 1 オクテット。0=none 1=to 2=from 3=both。 | MUST（Roster-Item で） |
 | `0x0103` | Roster-Name | single | UTF-8 ニックネーム。 | MAY |
@@ -1270,7 +1270,7 @@ SRV _ximp._tcp.<domain> → host:port
 
 ---
 
-## 18. 1.1 で定義する項目
+## 18. 追加仕様（ROSTER、Presence、クロスホスト、DM、ban、ホスト権限）
 
 ### 18.1 ROSTER（ホーム側の連絡先）
 
@@ -1475,14 +1475,22 @@ IQ set
 
 ---
 
-## 付録 A. 1.0 で予約のままの項目
+## 付録 A. 予約項目（統合済み）
 
-- presence-subscribe の IQ 形式（Event-Subscribe bit 2 で代替可）
-- `Avatar-Ref` の `PRESENCE` 以外での利用（`ROSTER`、`MESSAGE`）— 1.1 §18.4 で許可
-- `contacts` の評価で ROSTER を持たない場合の扱い — 1.1 §18.6
-- ROSTER の詳細 — 1.1 §18.1 で定義
-- emoji-resolve の IQ 形式 — 1.1 §18.3 で定義
-- アバターの一括取得 IQ — 1.1 §18.5 で定義
+旧 1.1 で予約だった項目は §18 および各節に統合済み:
+- ROSTER の詳細 — §18.1
+- emoji-resolve の IQ 形式 — §18.3
+- `Avatar-Ref` の `PRESENCE` 以外での利用 — §18.4
+- アバターの一括取得 IQ — §18.5
+- `contacts` の評価 — §18.6（撤廃、全公開）
+- クロスホスト Presence — §18.8
+- クロスホスト DM — §18.9
+- dm-policy / ブロックリスト — §18.10
+- コミュニティ ban — §18.11
+- ホストロール — §18.12
+- ホスト所有権譲渡 — §18.13
+
+RECEIPT（`0x12`）は仕様から除去（§18.7）。
 
 ## 付録 B. 非規範の方式名
 
