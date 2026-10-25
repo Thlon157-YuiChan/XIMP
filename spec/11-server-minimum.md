@@ -6,11 +6,11 @@
 
 ```
 SRV _ximp._tcp.<domain> → host:port
-無ければ A/AAAA <domain> の 5777
+無ければ A/AAAA <domain> の 7157
 ```
 
 - SRV を引かなければならない（MUST）。
-- 無ければ A/AAAA の 5777 を使わなければならない（MUST）。
+- 無ければ A/AAAA の 7157 を使わなければならない（MUST）。
 - SRV の優先度・重みは RFC 2782 に従わなければならない（MUST）。
 
 ## 16. 実装が持たないもの

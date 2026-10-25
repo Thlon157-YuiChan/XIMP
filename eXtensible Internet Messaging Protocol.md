@@ -54,7 +54,7 @@ XIMP はクライアントとサーバの間でテキストと小さなバイナ
 
 - 運び役は TCP 上の TLS 1.3 でなければならない（MUST）。HTTP / WebSocket / STARTTLS を使ってはならない（MUST NOT）。
 - TLS 1.3 のみを使わなければならない（MUST）。TLS 1.2 以下は拒否しなければならない（MUST）。クライアント証明書を使ってはならない（MUST NOT）。ALPN は `ximp` でなければならない（MUST）。0-RTT を使ってはならない（MUST NOT）。セッション再開は PSK で許容してよい（MAY）。SNI は送ってよい（MAY）が、サーバは SNI をコミュニティ選択に使ってはならない（MUST NOT）。
-- 既定ポートは `5777/tcp` とする SHOULD。実装は設定でポートを変更できなければならない（MUST）。IANA 登録までは 5777 を使う SHOULD。
+- 既定ポートは `7157/tcp` とする SHOULD。実装は設定でポートを変更できなければならない（MUST）。IANA 登録までは 7157 を使う SHOULD。
 - 多オクテット整数はすべてビッグエンディアンでなければならない（MUST）。
 - 文字列は UTF-8 のみでなければならない（MUST）。BOM を付けてはならない（MUST NOT）。NUL 終端を付けてはならない（MUST NOT）。長さは親の Length で示す。
 - 不正な UTF-8（過長符号化、途中切れ、孤立サロゲート）は `malformed` としなければならない（MUST）。
@@ -1188,11 +1188,11 @@ IQ set
 
 ```
 SRV _ximp._tcp.<domain> → host:port
-無ければ A/AAAA <domain> の 5777
+無ければ A/AAAA <domain> の 7157
 ```
 
 - SRV を引かなければならない（MUST）。
-- 無ければ A/AAAA の 5777 を使わなければならない（MUST）。
+- 無ければ A/AAAA の 7157 を使わなければならない（MUST）。
 - SRV の優先度・重みは RFC 2782 に従わなければならない（MUST）。
 
 ## 16. 実装が持たないもの
