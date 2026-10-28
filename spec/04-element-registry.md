@@ -127,6 +127,9 @@ C の既定は、その型を必須とするメッセージでの推奨（SHOULD
 | `0x0112` | Edited | single | Unix ミリ秒 8 オクテット。最終編集時刻。 | MUST（編集済みで） |
 | `0x0113` | Deleted | single | 空。削除済みの印。 | MUST（削除通知で） |
 | `0x0114` | Delete-Target | single | 対象の Message-ID。 | MUST（削除で） |
+| `0x0115` | File-Name | single | UTF-8。ファイル名。 | MAY |
+| `0x0116` | File-Size | single | 8 オクテット符号なし。バイト単位。 | MAY |
+| `0x0117` | File-Hash | single | 32 オクテット。SHA-256。 | MAY |
 | `0x3F00` | Vendor | list | 先頭 4 オクテットが IANA PEN。続きはベンダ要素。C ビットはベンダが決める。未知の Vendor 要素は C=0 として飛ばせる。入れ子可。深さは 3.2 の制限に従う。 | MAY |
 
 ### 6.1 Avatar の構造

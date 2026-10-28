@@ -201,5 +201,18 @@ IQ set
 - `host-role-set` で HOST_OWNER ビットを直接付与してはならない（MUST NOT）。
 - HOST_OWNER が 1 人の場合でも譲渡は許可する（MUST）。譲渡後に 0 人にならないよう保証しなければならない（MUST）。
 
+### 18.14 ファイル転送の IQ 形式
+
+```
+IQ get file-fetch
+  Message-ID = <message-id>
+→ 応答: IQ result, Transfer-ID = <16B>（新規発行）
+  その後 CHUNK フレームでストリーム送信
+```
+
+- 取得には READ が必要（MUST）。
+- サーバは Transfer-ID を新規発行する（MUST）。MESSAGE には Transfer-ID を永続化しない（MUST NOT）。
+- 期限切れ・未存在は `not-found`（MUST）。
+
 ---
 

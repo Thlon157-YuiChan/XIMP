@@ -316,6 +316,9 @@ C の既定は、その型を必須とするメッセージでの推奨（SHOULD
 | `0x0112` | Edited | single | Unix ミリ秒 8 オクテット。最終編集時刻。 | MUST（編集済みで） |
 | `0x0113` | Deleted | single | 空。削除済みの印。 | MUST（削除通知で） |
 | `0x0114` | Delete-Target | single | 対象の Message-ID。 | MUST（削除で） |
+| `0x0115` | File-Name | single | UTF-8。ファイル名。 | MAY |
+| `0x0116` | File-Size | single | 8 オクテット符号なし。バイト単位。 | MAY |
+| `0x0117` | File-Hash | single | 32 オクテット。SHA-256。 | MAY |
 | `0x3F00` | Vendor | list | 先頭 4 オクテットが IANA PEN。続きはベンダ要素。C ビットはベンダが決める。未知の Vendor 要素は C=0 として飛ばせる。入れ子可。深さは 3.2 の制限に従う。 | MAY |
 
 ### 6.1 Avatar の構造
@@ -955,6 +958,40 @@ IQ set
 
 ---
 
+## 12.6 ファイル転送（pull モデル）
+
+### メタデータ先行
+
+- 大容量バイナリを伴う MESSAGE は `Payload` を空にし、メタデータのみを載せる（MUST）。
+  - `File-Name`（`0x0115`、UTF-8）
+  - `File-Size`（`0x0116`、8B）
+  - `File-Hash`（`0x0117`、32B SHA-256）
+  - `Content-Type`（`0x0006`）で MIME タイプ
+- ライブ push でもメタデータのみ配送する（MUST）。実バイナリは送らない。
+- 小容量（Max-Size 以内）のバイナリは `Payload` を直接載せてよい（MAY）。
+
+### 要求ベースの取得
+
+```
+IQ get file-fetch
+  Message-ID = <message-id>
+→ 応答: IQ result, Transfer-ID = <16B>（新規発行）
+  その後 CHUNK フレームでストリーム送信
+```
+
+- 取得には READ が必要（MUST）。権限喪失後は取得不可（MUST）。
+- サーバは Transfer-ID を新規発行する（MUST）。MESSAGE には Transfer-ID を永続化しない（MUST NOT）。
+- ホストはバイナリを正本として保存する（MUST）。送信者がオフラインでも取得可能。
+- 保存期間・容量の上限は実装ポリシーで定義してよい（MAY）。期限切れは `not-found`。
+
+### 区別
+
+- テキスト: `Body` を使う。`Payload` を付けてはならない（MUST NOT）。
+- バイナリ: `Payload` を使う。`Body` を付けてはならない（MUST NOT）。
+- `Content-Type` で MIME を補助的に示す（MAY）。
+
+---
+
 ## 13. 権限
 
 判定に使うのは 32 ビットマスクだけでなければならない（MUST）。ロールはマスクを人に付ける管理用の名前でなければならない（MUST）。
@@ -1029,7 +1066,6 @@ IQ channel-acl-list
 
 - 名前で権限を判定してはならない（MUST NOT）。
 
-## 14. Bot と Slash Command
 
 ### 13.1 ホストレベル権限（Host-Mask）
 
@@ -1061,6 +1097,9 @@ IQ set  host-role-remove  Host-Role-EID
 
 - `host-role-set` は Host-Mask を EID に付与する（MUST）。既存値は上書きする（MUST）。
 - `host-role-remove` は EID の Host-Mask を 0 にする（MUST）。HOST_OWNER の EID は削除してはならない（MUST NOT）。
+
+
+## 14. Bot と Slash Command
 
 ### 14.1 Bot の身分
 
@@ -1472,6 +1511,19 @@ IQ set
 - Target への付与と呼び出し元からの除去は原子的に行わなければならない（MUST）。
 - `host-role-set` で HOST_OWNER ビットを直接付与してはならない（MUST NOT）。
 - HOST_OWNER が 1 人の場合でも譲渡は許可する（MUST）。譲渡後に 0 人にならないよう保証しなければならない（MUST）。
+
+### 18.14 ファイル転送の IQ 形式
+
+```
+IQ get file-fetch
+  Message-ID = <message-id>
+→ 応答: IQ result, Transfer-ID = <16B>（新規発行）
+  その後 CHUNK フレームでストリーム送信
+```
+
+- 取得には READ が必要（MUST）。
+- サーバは Transfer-ID を新規発行する（MUST）。MESSAGE には Transfer-ID を永続化しない（MUST NOT）。
+- 期限切れ・未存在は `not-found`（MUST）。
 
 ---
 

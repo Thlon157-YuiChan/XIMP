@@ -1,36 +1,5 @@
 ## 14. Bot と Slash Command
 
-### 13.1 ホストレベル権限（Host-Mask）
-
-コミュニティのロールマスクとは独立した 32 ビットマスクをホストレベルで使う（MUST）。
-
-| bit | 名前 | 意味 |
-|---|---|---|
-| 0 | CREATE_COMMUNITY | コミュニティを作成できる。 |
-| 1 | MANAGE_HOST | ホスト設定・ポリシーを変更できる。 |
-| 2 | GLOBAL_BAN | ホスト全体の ban を実行できる。 |
-| 3 | VIEW_AUDIT | 監査ログを参照できる（実装が提供する場合）。 |
-| 4–30 | 未割当 | 未知なら無視。 |
-| 31 | HOST_OWNER | 全ビットを含む。OR では作れない。最後の 1 人は外せない。 |
-
-- コミュニティのロールマスクと Host-Mask は別々に評価しなければならない（MUST）。混在してはならない（MUST NOT）。
-- コミュニティ作成には CREATE_COMMUNITY または HOST_OWNER が必要である（MUST）。
-- HOST_OWNER はデプロイ時に設定しなければならない（MUST）。プロトコルで付与してはならない（MUST NOT）。
-- Host-Role の管理には MANAGE_HOST または HOST_OWNER が必要である（MUST）。
-- Host-Role の付与は、自分が持つビットの範囲に限らなければならない（MUST NOT 超過）。
-- Host-Mask をコミュニティのロールマスクに OR してはならない（MUST NOT）。
-
-IQ（ホスト接続）:
-
-```
-IQ get  host-role-list
-IQ set  host-role-set     Host-Role-EID, Host-Mask
-IQ set  host-role-remove  Host-Role-EID
-```
-
-- `host-role-set` は Host-Mask を EID に付与する（MUST）。既存値は上書きする（MUST）。
-- `host-role-remove` は EID の Host-Mask を 0 にする（MUST）。HOST_OWNER の EID は削除してはならない（MUST NOT）。
-
 ### 14.1 Bot の身分
 
 - Bot も `bot@domain` のような EID を持たなければならない（MUST）。

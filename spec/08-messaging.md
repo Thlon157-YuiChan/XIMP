@@ -349,3 +349,37 @@ IQ set
 
 ---
 
+## 12.6 ファイル転送（pull モデル）
+
+### メタデータ先行
+
+- 大容量バイナリを伴う MESSAGE は `Payload` を空にし、メタデータのみを載せる（MUST）。
+  - `File-Name`（`0x0115`、UTF-8）
+  - `File-Size`（`0x0116`、8B）
+  - `File-Hash`（`0x0117`、32B SHA-256）
+  - `Content-Type`（`0x0006`）で MIME タイプ
+- ライブ push でもメタデータのみ配送する（MUST）。実バイナリは送らない。
+- 小容量（Max-Size 以内）のバイナリは `Payload` を直接載せてよい（MAY）。
+
+### 要求ベースの取得
+
+```
+IQ get file-fetch
+  Message-ID = <message-id>
+→ 応答: IQ result, Transfer-ID = <16B>（新規発行）
+  その後 CHUNK フレームでストリーム送信
+```
+
+- 取得には READ が必要（MUST）。権限喪失後は取得不可（MUST）。
+- サーバは Transfer-ID を新規発行する（MUST）。MESSAGE には Transfer-ID を永続化しない（MUST NOT）。
+- ホストはバイナリを正本として保存する（MUST）。送信者がオフラインでも取得可能。
+- 保存期間・容量の上限は実装ポリシーで定義してよい（MAY）。期限切れは `not-found`。
+
+### 区別
+
+- テキスト: `Body` を使う。`Payload` を付けてはならない（MUST NOT）。
+- バイナリ: `Payload` を使う。`Body` を付けてはならない（MUST NOT）。
+- `Content-Type` で MIME を補助的に示す（MAY）。
+
+---
+
